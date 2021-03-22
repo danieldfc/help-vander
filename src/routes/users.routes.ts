@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import UsersRepository from '../databases/repositories/UsersRepository';
 import { getCustomRepository } from 'typeorm';
+import ProjectRepository from '../databases/repositories/ProjectsRepository';
 
 const usersRoutes = Router();
 
@@ -73,6 +74,32 @@ usersRoutes.put('/:id', async (request, response) => {
   user.email = email ? email : user.email;
 
   await userRepository.save(user);
+
+  return response.json(user);
+});
+
+usersRoutes.patch('/:user_id/projects/:project_id', async (request, response) => {
+  const { user_id, project_id } = request.params;
+ 
+  const usersRepository = getCustomRepository(UsersRepository);
+  const projectsRepository = getCustomRepository(ProjectRepository);
+
+  const user = await usersRepository.findOne({ where: { id: user_id } });
+  
+  if (!user) {
+    return response.status(400).json({ error: { message: 'Usuário não existente!' } })
+  }
+
+  const project = await projectsRepository.findOne({ where: { id: project_id } });
+
+  if (!project) {
+    return response.status(400).json({ error: { message: 'Projeto não existente!' } })
+  };
+
+  user.projectId = project.id;
+  user.project = project;
+
+  await usersRepository.manager.save(user);
 
   return response.json(user);
 });

@@ -1,13 +1,15 @@
 import { Router } from 'express';
-import ProjectsRepository from '../databases/repositories/ProjectsRepository';
 import { getCustomRepository } from 'typeorm';
+import ProjectsRepository from '../databases/repositories/ProjectsRepository';
 
 const projetosRoutes = Router();
 
 projetosRoutes.get('/', async (request, response) => {
   const projetosRepository = getCustomRepository(ProjectsRepository);
 
-  const projects = await projetosRepository.find({});
+  const projects = await projetosRepository.find({
+    relations: ['users']
+  });
 
   return response.json(projects);
 });
