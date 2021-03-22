@@ -1,0 +1,17 @@
+{
+  "type": "postgres",
+  "host": "localhost",
+  "port": 5432,
+  "username": "docker",
+  "password": "docker",
+  "database": "test-vander",
+  "entities": [
+    "./src/databases/entities/*.ts"
+  ],
+  "migrations": [
+    "./src/databases/migrations/*.ts"
+  ],
+  "cli": {
+    "migrationsDir": "./src/databases/migrations"
+  }
+}
